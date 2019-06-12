@@ -1,7 +1,9 @@
 import React from "react";
-import logo from "../assets/logo.svg";
+// import logo from "../assets/logo.svg";
 import "../styles/App.css";
-import PropTypes from "prop-types"; // figure out where to add proptypes later!
+// import PropTypes from "prop-types"; // figure out where to add proptypes later!
+import { MealSelector } from "./MealSelector";
+import foodService from "../services/FoodService";
 
 class App extends React.Component {
   constructor(props) {
@@ -23,7 +25,8 @@ class App extends React.Component {
   // when clicked, updates state.text with user's search input (from handleChange) -> this gets used in search results
   handleClick = () => {
     this.setState({
-      text: this.state.foodSearch
+      text: this.state.foodSearch,
+      result: foodService()
     });
   };
 
@@ -98,15 +101,7 @@ class App extends React.Component {
       <React.Fragment>
         <h1>Calorie Tracker</h1>
 
-        <label>
-          Select Meal:
-          <select defaultValue="Breakfast" onChange={this.handleSelect}>
-            <option value="Breakfast">Breakfast</option>
-            <option value="Lunch">Lunch</option>
-            <option value="Dinner">Dinner</option>
-            <option value="Snack">Snack</option>
-          </select>
-        </label>
+        <MealSelector handleSelect={this.handleSelect} />
 
         <input
           id="food-search"
@@ -116,37 +111,51 @@ class App extends React.Component {
         />
         <button onClick={this.handleClick}>Search</button>
         <h2>Search results for {this.state.text ? this.state.text : "..."}</h2>
-        <ul>{this.searchResults()}</ul>
+        {this.searchResults()}
         <div>
           <h1>Daily Log</h1>
           <h2>{Date()}</h2>
-          <ul>
-            <AddtoLog log={this.state.dailyLog} />
-          </ul>
+          <DailyLog log={this.state.dailyLog} />
         </div>
       </React.Fragment>
     );
   }
 }
 
-// creates daily log output based on state.dailyLog
-function AddtoLog(props) {
-  let currentLog = props.log;
-  if (currentLog.length > 0) {
-    return (
-      <div>
-        {currentLog.map((element, index) => (
-          <li key={index}>
-            Meal: {element.meal}, Type: {element.type}, Calorie:{" "}
-            {element.calorie}
-          </li>
-        ))}
-        <h1>
-          Calorie Total:
-          {currentLog.reduce((acc, curVal) => acc + curVal.calorie, 0)}
-        </h1>
-      </div>
-    );
-  } else return <h3>No items</h3>;
+function DailyLog(props) {
+  const mealArr = ["Breakfast", "Lunch", "Dinner", "Snack"];
+  return mealArr.map(meal => (
+    <MealLog
+      key={Date() + meal}
+      arr={props.log.filter(element => element.meal === meal)}
+      meal={meal}
+    />
+  ));
 }
+
+function MealLog(props) {
+  let mealLog = props.arr;
+  let mealLogHasItems = mealLog.length > 0 ? true : false;
+
+  return (
+    <React.Fragment>
+      <h1>{props.meal}</h1>
+      {mealLogHasItems ? <ItemisedLog arr={mealLog} /> : <p>No Items</p>}
+      <h2>
+        Calorie Total:{" "}
+        {mealLog.reduce((acc, curVal) => acc + curVal.calorie, 0)}
+      </h2>
+    </React.Fragment>
+  );
+}
+
+function ItemisedLog(props) {
+  let mealLog = props.arr;
+  return mealLog.map((element, index) => (
+    <li key={index}>
+      Type: {element.type}, Calorie: {element.calorie}
+    </li>
+  ));
+}
+
 export default App;
