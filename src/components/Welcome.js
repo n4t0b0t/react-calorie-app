@@ -4,44 +4,48 @@ import { Route, Link, BrowserRouter as Router } from "react-router-dom";
 function Welcome(props) {
   return (
     <React.Fragment>
-      <div>
+      <div data-testid="welcome-screen">
         <p>
           Welcome to My Calorie Tracker! Please share with us some of your goals
           so that we can better help you reach them!
         </p>
         <div className="user-input">
-          <label>Name:</label>
+          <label htmlFor="userName">Name:</label>
           <input
-            id="name"
-            placeholder="name"
+            id="userName"
+            placeholder="Name"
             type="text"
+            value={props.userName}
             onChange={props.handleChange}
           />
-          <label>Current Weight:</label>
+          <label htmlFor="userWeight">Current Weight:</label>
           <input
-            id="weight"
-            placeholder="current weight"
-            type="text"
+            id="userWeight"
+            placeholder="Current weight in kg"
+            type="number"
+            value={props.userWeight}
             onChange={props.handleChange}
           />
-          <label>Weight Target:</label>
+          <label htmlFor="weightTarget">Weight Target:</label>
           <input
             id="weightTarget"
-            placeholder="weight target"
-            type="text"
+            placeholder="Weight target in kg"
+            type="number"
+            value={props.weightTarget}
             onChange={props.handleChange}
           />
-          <label>Time Horizon:</label>
+          <label htmlFor="time">Time Horizon:</label>
           <input
             id="time"
-            placeholder="time in weeks"
-            type="text"
+            placeholder="Time in weeks"
+            type="number"
+            value={props.time}
             onChange={props.handleChange}
           />
-          <button>
-            <Link to="/tracker">Submit</Link>
-          </button>
-          {/* <button onClick={props.handleClick}>Submit</button> */}
+
+          <Link to="/tracker">
+            <button>Submit</button>
+          </Link>
         </div>
       </div>
     </React.Fragment>

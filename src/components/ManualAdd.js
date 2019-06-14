@@ -3,21 +3,23 @@ import round from "./Round";
 
 function ManualAdd(props) {
   return (
-    <div className="manual-input">
+    <div className="manual-input" data-testid="manual-add">
       <CannedResponse inputText={props.inputText} results={props.results} />
       <div className="user-input">
-        <label>Food Item:</label>
+        <label htmlFor="manFood">Food Item:</label>
         <input
           id="manFood"
           type="text"
           placeholder="e.g. 'twisties'"
+          value={props.manFood}
           onChange={props.handleChange}
         />
-        <label>Estimated Calories:</label>
+        <label htmlFor="manCalorie">Estimated Calories:</label>
         <input
           id="manCalorie"
-          type="text"
+          type="number"
           placeholder="e.g. '50' or '500'"
+          value={props.manCalorie}
           onChange={props.handleChange}
         />
         <button

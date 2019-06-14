@@ -19,7 +19,7 @@ class Tracker extends React.Component {
       foodSearch: "",
       manFood: "",
       manCalorie: "",
-      value: "Breakfast"
+      mealSelect: "Breakfast"
     };
   }
 
@@ -35,7 +35,7 @@ class Tracker extends React.Component {
   // when clicked, updates state.dailyLog with element passed in
   handleAdd = element => {
     let newItem = {
-      meal: this.state.value,
+      meal: this.state.mealSelect,
       type: element.label,
       calorie: element.calorie
     };
@@ -47,9 +47,9 @@ class Tracker extends React.Component {
     this.setState({ [e.target.id]: e.target.value });
   };
 
-  // this updates value in state with meal type
+  // this updates state.[id] with selected meal type
   handleSelect = e => {
-    this.setState({ value: e.target.value });
+    this.setState({ mealSelect: e.target.value });
   };
 
   fetchData = async () => {
@@ -139,17 +139,20 @@ class Tracker extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <main>
+        <main data-testid="tracker-screen">
           <p>
             Hello{" "}
-            {this.props.name
-              ? this.props.name
+            {this.props.userName
+              ? this.props.userName
               : "visitor, you may want to consider adding your information and goals for better results"}
             ! Search here to find nutrition data for food and meals you've
             eaten, and add them to your daily log.
           </p>
           <br />
-          <MealSelector handleSelect={this.handleSelect} />
+          <MealSelector
+            mealSelect={this.state.mealSelect}
+            handleSelect={this.handleSelect}
+          />
 
           <div className="user-input">
             <label>Search for food:</label>
@@ -175,7 +178,6 @@ class Tracker extends React.Component {
           <h2>Today's Food Log</h2>
           <DailyLog log={this.state.dailyLog} />
         </div>
-        {/* </div> */}
       </React.Fragment>
     );
   }

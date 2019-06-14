@@ -13,14 +13,18 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
-      weight: "",
+      userName: "",
+      userWeight: "",
       weightTarget: "",
       time: ""
     };
   }
   handleChange = e => {
-    this.setState({ [e.target.id]: e.target.value });
+    if (e.target.type === "number") {
+      this.setState({ [e.target.id]: Number(e.target.value) });
+    } else {
+      this.setState({ [e.target.id]: e.target.value });
+    }
   };
 
   handleClick() {}
@@ -28,12 +32,12 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <nav>
+        <nav data-testid="nav-bar">
           <li>New User</li>
           <li>Calorie Tracker</li>
         </nav>
         <div className="container">
-          <header>
+          <header data-testid="header">
             <div className="title">
               <h1>My Calorie Tracker</h1>
               <div className="icon-grid">
@@ -49,14 +53,22 @@ class App extends React.Component {
             <Route
               path="/"
               exact={true}
-              render={() => <Welcome handleChange={this.handleChange} />}
+              render={() => (
+                <Welcome
+                  userName={this.state.userName}
+                  userWeight={this.state.userWeight}
+                  weightTarget={this.state.weightTarget}
+                  time={this.state.time}
+                  handleChange={this.handleChange}
+                />
+              )}
             />
             <Route
               path="/tracker"
               render={() => (
                 <Tracker
-                  name={this.state.name}
-                  weight={this.state.weight}
+                  userName={this.state.userName}
+                  userWeight={this.state.userWeight}
                   weightTarget={this.state.weightTarget}
                   time={this.state.time}
                 />

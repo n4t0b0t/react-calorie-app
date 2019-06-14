@@ -24,7 +24,7 @@ function MealLog(props) {
   let mealLogHasItems = mealLog.length > 0 ? true : false;
 
   return (
-    <React.Fragment>
+    <div data-testid={props.meal}>
       <h3>{props.meal}</h3>
       {mealLogHasItems ? <ItemisedLog arr={mealLog} /> : <p>No Items</p>}
       <h4>
@@ -32,7 +32,7 @@ function MealLog(props) {
         {mealLog.reduce((acc, curVal) => acc + curVal.calorie, 0)}
       </h4>
       <hr />
-    </React.Fragment>
+    </div>
   );
 }
 
