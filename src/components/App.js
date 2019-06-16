@@ -32,24 +32,35 @@ class App extends React.Component {
   render() {
     return (
       <React.Fragment>
-        <nav data-testid="nav-bar">
-          <li>New User</li>
-          <li>Calorie Tracker</li>
-        </nav>
-        <div className="container">
-          <header data-testid="header">
-            <div className="title">
-              <h1>My Calorie Tracker</h1>
-              <div className="icon-grid">
-                <img className="icon" src={Mushroom} alt="Mushroom" />
-                <img className="icon" src={Cake} alt="Cake" />
-                <img className="icon" src={Hamburger} alt="Hamburger" />
-                <img className="icon" src={Orange} alt="Orange" />
+        <Router>
+          <nav data-testid="nav-bar">
+            <ul>
+              <li>
+                <Link className="link" to="/">
+                  New User
+                </Link>
+              </li>
+              <li>
+                <Link className="link" to="/tracker">
+                  Calorie Tracker
+                </Link>
+              </li>
+            </ul>
+          </nav>
+          <div className="container">
+            <header data-testid="header">
+              <h2 className="day-count">Day 1</h2>
+              <div className="title">
+                <h1>My Calorie Tracker</h1>
+                <div className="icon-grid">
+                  <img className="icon" src={Mushroom} alt="Mushroom" />
+                  <img className="icon" src={Cake} alt="Cake" />
+                  <img className="icon" src={Hamburger} alt="Hamburger" />
+                  <img className="icon" src={Orange} alt="Orange" />
+                </div>
               </div>
-            </div>
-            <h3 className="calendar">{Date().slice(0, -44)}</h3>
-          </header>
-          <Router>
+              <h2 className="calendar">{Date().slice(0, -44)}</h2>
+            </header>
             <Route
               path="/"
               exact={true}
@@ -74,8 +85,8 @@ class App extends React.Component {
                 />
               )}
             />
-          </Router>
-        </div>
+          </div>
+        </Router>
       </React.Fragment>
     );
   }

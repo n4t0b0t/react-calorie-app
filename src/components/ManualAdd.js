@@ -1,5 +1,5 @@
 import React from "react";
-import round from "./Round";
+import round from "../funcs/Round";
 
 function ManualAdd(props) {
   return (

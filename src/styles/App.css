@@ -1,42 +1,8 @@
-/* .App {
-  text-align: center;
-}
-
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-} */
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Carme", sans-serif;
 }
 
 nav {
@@ -51,6 +17,7 @@ nav {
   grid-template-rows: 150px auto;
   justify-items: center;
   background-color: #f0f0f0;
+  color: #3b3a30;
 }
 
 header {
@@ -58,7 +25,7 @@ header {
   grid-area: header;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-areas: ". title calendar";
+  grid-template-areas: "day-count title calendar";
   align-items: center;
   background-color: #eaece5;
   color: #3b3a30;
@@ -74,11 +41,11 @@ main {
 .log {
   box-shadow: 0 8px 16px 0 #9fa9a3;
   overflow: hidden;
-  /* border-radius: 5px; */
+  border-radius: 5px;
   padding: 40px;
   grid-area: sidebar;
   position: sticky;
-  height: 75vw;
+  height: 100vh;
   width: 100%;
   background-color: #3b3a30;
   color: #eaece5;
@@ -89,7 +56,9 @@ main {
 .title {
   grid-area: title;
 }
-
+.day-count {
+  grid-area: day-count;
+}
 .calendar {
   grid-area: calendar;
 }
@@ -141,6 +110,7 @@ button {
   font-weight: bold;
   border-radius: 3px;
   padding: 7px 20px;
+  margin: 3px;
   color: #ffffff;
   background-color: #5995da;
 }
@@ -195,12 +165,79 @@ figcaption {
   font-size: 0.8rem;
 }
 
-p {
-  font-weight: bold;
+.faq {
+  background-color: #c0ded9;
+  padding: 40px;
 }
 
-h2,
-h3,
-h4 {
-  padding: 10px 0px;
+.welcome {
+  height: 100vh;
+  width: 700px;
+  margin: auto;
+  padding: 40px;
+}
+
+h1 {
+  color: #77a8a8;
+  font-family: "Rouge Script", cursive;
+  font-size: 40px;
+  font-weight: normal;
+  line-height: 48px;
+  margin: 0 0 10px;
+  text-align: center;
+  text-shadow: 1px 1px 2px #082b34;
+}
+
+h2 {
+  color: #3b3a30;
+  font-family: "Julius Sans One", sans-serif;
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 32px;
+  margin: 10px 0 10px;
+  text-shadow: 1px 1px 1px #b2c2bf;
+}
+
+h3 {
+  font-family: "Julius Sans One", sans-serif;
+  line-height: 20px;
+  margin: 20px 0 20px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0 0 10px;
+}
+
+nav {
+  background-color: #9fa9a3;
+}
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  background-color: #9fa9a3;
+  overflow: hidden;
+}
+
+nav li {
+  float: left;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+nav .link {
+  text-decoration: none;
+  color: white;
+}
+
+nav li:hover {
+  background-color: #3b3a30;
+}
+
+.log h2 {
+  color: #fefbd8;
 }
