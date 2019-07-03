@@ -7,10 +7,22 @@ function Welcome(props) {
       <div className="welcome" data-testid="welcome-screen">
         <h2>Welcome to My Calorie Tracker!</h2>
         <p>
-          Please share with us some of your goals so that we can better help you
-          reach them!
+          Please create an account and share your goals so that we can better
+          help you reach them!
         </p>
         <br />
+        <div className="user-input">
+          <label>Username:</label>
+          <input id="userUsername" type="text" />
+        </div>
+        <div className="user-input">
+          <label>Password:</label>
+          <input id="userPassword" type="text" />
+        </div>
+        <div className="user-input">
+          <label>Email:</label>
+          <input id="userEmail" type="text" />
+        </div>
         <div className="user-input">
           <label htmlFor="userName">Name:</label>
           <input
