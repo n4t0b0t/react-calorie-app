@@ -35,7 +35,5 @@ module.exports = {
   createNewUser,
   deleteUser,
   updateUser,
-  //   findDate,
   updateMealLog
-  //   getMealLog
 };

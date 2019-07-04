@@ -22,9 +22,26 @@ router.param("username", async (req, res, next, username) => {
   }
 });
 
-// router.param("date", async (req, res, next, date) => {
-// WILL BE REWRITTEN TO CHECK QUERY DATE FORMATS/INPUTS
-// });
+// WILL BE UPDATED TO INCLUDE VALIDATION
+router.param("date", (req, res, next, date) => {
+  req.date = new Date(date).getTime();
+  next();
+});
+
+// WILL BE UPDATED TO INCLUDE VALIDATION
+router.param("id", async (req, res, next, id) => {
+  const foundItem = req.user.foodLog
+    .find(log => log.date === req.date)
+    .meals.findIndex(el => (el._id ? el._id.toString() === id : false));
+  if (typeof foundItem == "number") {
+    req.itemIndex = foundItem;
+    next();
+  } else {
+    const err = new Error(`cannot find food item with id: ${id}`);
+    err.statusCode = 400;
+    next(err);
+  }
+});
 
 // CHECK THAT FOODLOG EXISTS (should be created by default in createNewUser()), ELSE GIVE ERROR
 router.use("/:username/foodlog", (req, res, next) => {
@@ -80,10 +97,7 @@ router.get("/:username/foodlog", (req, res, next) => {
 });
 
 router.get("/:username/foodlog/:date", (req, res, next) => {
-  const queryDate = new Date(req.params.date);
-  const foundDate = req.user.foodLog.find(
-    log => log.date.getTime() === queryDate.getTime()
-  );
+  const foundDate = req.user.foodLog.find(log => log.date === req.date);
   if (foundDate) {
     const output = foundDate.meals
       .filter(obj => (req.query.meal ? obj.meal === req.query.meal : true))
@@ -97,13 +111,10 @@ router.get("/:username/foodlog/:date", (req, res, next) => {
 });
 
 router.post("/:username/foodlog/:date", async (req, res, next) => {
-  const queryDate = new Date(req.params.date);
-  const foundDate = req.user.foodLog.find(
-    log => log.date.getTime() === queryDate.getTime()
-  );
+  const foundDate = req.user.foodLog.find(log => log.date === req.date);
   if (!foundDate) {
     const newDateLog = {
-      date: queryDate,
+      date: req.date,
       meals: [req.body]
     };
     req.user.foodLog.push(newDateLog);
@@ -114,9 +125,7 @@ router.post("/:username/foodlog/:date", async (req, res, next) => {
       next(err);
     }
   } else {
-    req.user.foodLog
-      .find(log => log.date.getTime() === queryDate.getTime())
-      .meals.push(req.body);
+    req.user.foodLog.find(log => log.date === req.date).meals.push(req.body);
     try {
       const output = await updateMealLog(req.user);
       res.status(201).json(output);
@@ -126,9 +135,37 @@ router.post("/:username/foodlog/:date", async (req, res, next) => {
   }
 });
 
-router.put("/:username/foodlog/:date/:id", async (req, res, next) => {});
+router.put("/:username/foodlog/:date/:id", async (req, res, next) => {
+  const updatedItem = {
+    _id: req.user.foodLog.find(log => log.date === req.date).meals[
+      req.itemIndex
+    ]._id,
+    meal: req.body.meal,
+    item: req.body.item,
+    calories: req.body.calories
+  };
+  req.user.foodLog
+    .find(log => log.date === req.date)
+    .meals.splice(req.itemIndex, 1, updatedItem);
+  try {
+    const output = await updateMealLog(req.user);
+    res.status(200).json(output);
+  } catch (err) {
+    next(err);
+  }
+});
 
-router.delete("/:username/foodlog/:date/:id", async (req, res, next) => {});
+router.delete("/:username/foodlog/:date/:id", async (req, res, next) => {
+  req.user.foodLog
+    .find(log => log.date === req.date)
+    .meals.splice(req.itemIndex, 1);
+  try {
+    const output = await updateMealLog(req.user);
+    res.status(200).json(output);
+  } catch (err) {
+    next(err);
+  }
+});
 
 // ERROR HANDLER:
 router.use((err, req, res, next) => {

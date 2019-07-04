@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true },
   foodLog: [
     {
-      date: { type: Date }, //  default: Date.now
+      date: { type: Number }, //
       meals: [{ meal: String, item: String, calories: Number }]
     }
   ]

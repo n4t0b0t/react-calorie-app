@@ -143,15 +143,20 @@ describe("main CRUD tests", () => {
         email: "fakeUser1@gmail.com",
         foodLog: [
           {
-            date: new Date("2019-06-30"),
+            date: new Date("2019-06-30").getTime(),
             meals: [
-              { meal: "breakfast", item: "banana", calories: 50 },
+              {
+                _id: "41224d776a326fb40f000001",
+                meal: "breakfast",
+                item: "oatmeal",
+                calories: 50
+              },
               { meal: "breakfast", item: "apple", calories: 25 },
               { meal: "lunch", item: "ban mian", calories: 500 }
             ]
           },
           {
-            date: new Date("2019-07-01"),
+            date: new Date("2019-07-01").getTime(),
             meals: [
               { meal: "breakfast", item: "banana", calories: 50 },
               { meal: "lunch", item: "ban mian", calories: 500 }
@@ -165,7 +170,7 @@ describe("main CRUD tests", () => {
         email: "fakeUser2@gmail.com",
         foodLog: [
           {
-            date: new Date("2019-07-02"),
+            date: new Date("2019-07-02").getTime(),
             meals: [
               { meal: "breakfast", item: "apple", calories: 25 },
               { meal: "breakfast", item: "cereal", calories: 120 }
@@ -194,7 +199,7 @@ describe("main CRUD tests", () => {
       );
       expect(response.status).toEqual(200);
       expect(response.body.length).toEqual(
-        mealTestData[0].foodLog[0].meals.length
+        mealTestData[0].foodLog[0].meals.length // need to improve test logic
       );
     });
 
@@ -216,7 +221,7 @@ describe("main CRUD tests", () => {
         `/users/${mealTestData[0].username}/foodlog/${queryDate}?meal=breakfast`
       );
       expect(response.status).toEqual(200);
-      expect(response.body.length).toEqual(2); // hard-coded - need to improve test logic
+      expect(response.body.length).toEqual(2); // hard-coded - need to improve test logic!
     });
 
     it("GET /users/:username/foodlog/:date?meal=breakfast&item=apple should return all breakfast meals containing apple from the date's daily log", async () => {
@@ -229,25 +234,30 @@ describe("main CRUD tests", () => {
         }/foodlog/${queryDate}?meal=breakfast&item=apple`
       );
       expect(response.status).toEqual(200);
-      expect(response.body.length).toEqual(1); // hard-coded - need to improve test logic
+      expect(response.body.length).toEqual(1); // hard-coded - need to improve test logic!
     });
 
     it("POST /users/:username/foodlog/:date should add a meal to an existing daily log", async () => {
       const userDbInstance = db.collection("users");
       await userDbInstance.insertMany(mealTestData);
       const queryDate = "2019-07-02";
+      const queryTime = new Date(queryDate).getTime();
       const mealToAdd = { meal: "dinner", item: "ramen", calories: 450 };
       const response = await request(app)
         .post(`/users/${mealTestData[1].username}/foodlog/${queryDate}`)
         .send(mealToAdd);
-      const foundUser = await userDbInstance.findOne({
-        username: mealTestData[1].username
+      const filteredResponse = response.body.foodLog.find(
+        element => element.date === queryTime
+      );
+      const foundDate = await userDbInstance.findOne({
+        username: mealTestData[1].username,
+        "foodLog.date": queryTime
       });
-      const foundDate = foundUser.foodLog.find(
-        element => element.date.getTime() === new Date(queryDate).getTime()
+      const dailyLog = foundDate.foodLog.find(
+        element => element.date === queryTime
       );
       expect(response.status).toEqual(201);
-      expect(foundDate.meals.length).toEqual(3); // hard-coded - need to improve test logic
+      expect(filteredResponse.meals.length).toEqual(dailyLog.meals.length);
     });
 
     it("POST /users/:username/foodlog/:date should add a meal to a created daily log", async () => {
@@ -262,11 +272,52 @@ describe("main CRUD tests", () => {
         username: mealTestData[1].username
       });
       const foundDate = foundUser.foodLog.find(
-        element => element.date.getTime() === new Date(queryDate).getTime()
+        element => element.date === new Date(queryDate).getTime()
       );
       expect(response.status).toEqual(201);
       expect(foundDate.meals.length).toEqual(1);
       expect(foundDate.meals[0].item).toEqual(mealToAdd.item);
+    });
+
+    it.only("DELETE /users/:username/foodlog/:id should delete a meal from daily log", async () => {
+      const userDbInstance = db.collection("users");
+      await userDbInstance.insertOne(mealTestData[0]);
+      // .then(result => console.log(result.ops[0].foodLog[0].meals[0]));
+      const queryDate = "2019-06-30";
+      const queryId = "41224d776a326fb40f000001";
+      const response = await request(app).delete(
+        `/users/${mealTestData[0].username}/foodlog/${queryDate}/${queryId}`
+      );
+      expect(response.status).toEqual(200);
+      expect(
+        response.body.foodLog.find(
+          element => element.date === new Date(queryDate).getTime()
+        ).meals.length
+      ).toEqual(2); // hard-coded - need to improve test logic!
+    });
+
+    it("PUT /users/:username/foodlog/:id should update a meal from daily log", async () => {
+      const userDbInstance = db.collection("users");
+      await userDbInstance.insertOne(mealTestData[0]);
+      const queryDate = "2019-06-30";
+      const queryId = "41224d776a326fb40f000001";
+      const updatedItem = {
+        meal: "breakfast",
+        item: "wonton mee",
+        calories: 200
+      };
+      const response = await request(app)
+        .put(
+          `/users/${mealTestData[0].username}/foodlog/${queryDate}/${queryId}`
+        )
+        .send(updatedItem);
+      console.log(response.body.foodLog[0]);
+      expect(response.status).toEqual(200);
+      expect(
+        response.body.foodLog.find(
+          element => element.date === new Date(queryDate).getTime()
+        ).meals.length
+      ).toEqual(3); // hard-coded - need to improve test logic!
     });
   });
 });
