@@ -3,31 +3,64 @@ const router = express.Router();
 const {
   findUser,
   getAllUsers,
-  createNewUser,
   deleteUser,
   updateUser,
   updateMealLog
 } = require("../controllers/user.controller");
+const { checkUserToken } = require("../controllers/jwt.controller");
 
-// CHECK THAT USERNAME EXISTS, ELSE GIVE ERROR
-router.param("username", async (req, res, next, username) => {
-  const foundUser = await findUser(username);
-  if (foundUser) {
-    req.user = foundUser;
-    next();
+router.use("/", async (req, res, next) => {
+  const auth = req.headers.authorization;
+  if (auth) {
+    try {
+      const authCheck = await checkUserToken(auth);
+      req.auth = authCheck;
+      console.log("authCheck", authCheck);
+      next();
+    } catch (err) {
+      err.statusCode = 401;
+      next(err);
+    }
   } else {
-    const err = new Error(`cannot find user with username: ${username}`);
-    err.statusCode = 400;
+    const err = new Error("user is not authorised");
+    err.statusCode = 401;
     next(err);
   }
 });
 
+// CHECK THAT USERNAME EXISTS, ELSE GIVE ERROR
+router.param("username", async (req, res, next, username) => {
+  try {
+    const foundUser = await findUser(username);
+    if (foundUser) {
+      req.user = foundUser;
+      if (req.user.username === req.auth.username) {
+        next();
+      } else {
+        const err = new Error(
+          `${req.auth.username} is not authorised to view username: ${username}`
+        );
+        err.statusCode = 401;
+        next(err);
+      }
+    } else {
+      const err = new Error(`cannot find user with username: ${username}`);
+      err.statusCode = 400;
+      next(err);
+    }
+  } catch (err) {
+    next(err);
+  }
+});
+
+// FORMAT DATE AS SECONDS
 // WILL BE UPDATED TO INCLUDE VALIDATION
 router.param("date", (req, res, next, date) => {
   req.date = new Date(date).getTime();
   next();
 });
 
+// FINDS SPECIFIC ITEM BY ID IN DATE FOOD LOG
 // WILL BE UPDATED TO INCLUDE VALIDATION
 router.param("id", async (req, res, next, id) => {
   const foundItem = req.user.foodLog
@@ -64,10 +97,15 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.get("/:username", async (req, res, next) => {
+  res.status(200).json(req.user);
+});
+
+router.put("/:username", async (req, res, next) => {
   try {
-    const output = await createNewUser(req.body);
-    res.status(201).json(output);
+    // NEED TO ADD VALIDATION FOR UPDATE FIELDS
+    const output = await updateUser(req.params.username, req.body);
+    res.status(200).json(output);
   } catch (err) {
     next(err);
   }
@@ -76,16 +114,6 @@ router.post("/", async (req, res, next) => {
 router.delete("/:username", async (req, res, next) => {
   try {
     const output = await deleteUser(req.params.username);
-    res.status(200).json(output);
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.put("/:username", async (req, res, next) => {
-  try {
-    // NEED TO ADD VALIDATION FOR UPDATE FIELDS
-    const output = await updateUser(req.params.username, req.body);
     res.status(200).json(output);
   } catch (err) {
     next(err);

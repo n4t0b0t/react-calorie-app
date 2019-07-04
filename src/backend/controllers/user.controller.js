@@ -12,11 +12,6 @@ const getAllUsers = async () => {
   return await UserModel.find({});
 };
 
-const createNewUser = async input => {
-  const newUser = new UserModel({ ...input, foodLog: [] }); // creates blank foodlog for new user by default
-  return await newUser.save();
-};
-
 const deleteUser = async username => {
   return await UserModel.findOneAndDelete({ username });
 };
@@ -32,7 +27,6 @@ const updateMealLog = async user => {
 module.exports = {
   findUser,
   getAllUsers,
-  createNewUser,
   deleteUser,
   updateUser,
   updateMealLog
