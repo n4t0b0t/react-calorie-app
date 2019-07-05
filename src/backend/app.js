@@ -54,7 +54,7 @@ app.post("/logout", async (req, res, next) => {});
 app.post("/signup", async (req, res, next) => {
   try {
     const output = await signUpUser(req.body);
-    res.status(201).json(output);
+    res.status(201).json(`account ${output.username} has been created`);
   } catch (err) {
     next(err);
   }

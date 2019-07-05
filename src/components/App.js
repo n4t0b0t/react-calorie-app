@@ -8,11 +8,17 @@ import "../styles/App.css";
 import { Route, Link, BrowserRouter as Router } from "react-router-dom";
 import Welcome from "./Welcome";
 import Tracker from "./Tracker";
+import axios from "axios";
+
+const apiURI = "http://localhost:3000";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      userUsername: "",
+      userPassword: "",
+      userEmail: "",
       userName: "",
       userWeight: "",
       weightTarget: "",
@@ -28,6 +34,19 @@ class App extends React.Component {
   };
 
   handleClick() {}
+
+  signupUser = async () => {
+    const userSignup = {
+      username: this.state.userUsername,
+      password: this.state.userPassword,
+      email: this.state.userEmail
+    };
+
+    await axios
+      .post(`${apiURI}/signup`, userSignup)
+      .then(res => console.log("res", res))
+      .catch(err => console.log("err", err));
+  };
 
   render() {
     return (
@@ -71,6 +90,7 @@ class App extends React.Component {
                   weightTarget={this.state.weightTarget}
                   time={this.state.time}
                   handleChange={this.handleChange}
+                  signupUser={this.signupUser}
                 />
               )}
             />

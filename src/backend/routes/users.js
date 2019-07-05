@@ -9,13 +9,13 @@ const {
 } = require("../controllers/user.controller");
 const { checkUserToken } = require("../controllers/jwt.controller");
 
+// CHECK THAT USER IS AUTHORISED FROM JWT LOGIN
 router.use("/", async (req, res, next) => {
   const auth = req.headers.authorization;
   if (auth) {
     try {
       const authCheck = await checkUserToken(auth);
-      req.auth = authCheck;
-      console.log("authCheck", authCheck);
+      req.auth = authCheck; // returns object of username: username
       next();
     } catch (err) {
       err.statusCode = 401;
@@ -168,7 +168,7 @@ router.put("/:username/foodlog/:date/:id", async (req, res, next) => {
     _id: req.user.foodLog.find(log => log.date === req.date).meals[
       req.itemIndex
     ]._id,
-    meal: req.body.meal,
+    meal: req.body.meal ? req.body.meal : false, // update to leave original fields if not included?
     item: req.body.item,
     calories: req.body.calories
   };
