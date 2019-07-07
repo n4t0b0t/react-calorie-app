@@ -36,6 +36,7 @@ main {
   padding: 20px;
   grid-area: main;
   width: 100%;
+  height: 100vh;
 }
 
 .log {
@@ -121,6 +122,17 @@ button:hover {
 
 button:active {
   background-color: #407fc7;
+}
+
+.link-button {
+  background: none;
+  color: #5995da;
+  border: none;
+  padding: 0;
+  font-size: 10px;
+  /*border is optional*/
+  border-bottom: 1px solid #76aeed;
+  cursor: pointer;
 }
 
 .manual-input {
@@ -240,4 +252,41 @@ nav li:hover {
 
 .log h2 {
   color: #fefbd8;
+}
+
+.collapsible {
+  background-color: #eee;
+  color: #444;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active,
+.collapsible:hover {
+  background-color: #ccc;
+}
+
+/* Style the collapsible content. Note: hidden by default */
+.hidden {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
+.not-hidden {
+  padding: 0 18px;
+  display: block;
+  overflow: hidden;
+  background-color: #f1f1f1;
+}
+
+li {
+  list-style: none;
 }

@@ -1,37 +1,55 @@
 import React from "react";
 import { Route, Link, BrowserRouter as Router } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
-function Welcome(props) {
+function SignUp(props) {
+  if (props.isLoggedIn) {
+    return <Redirect to="/" />;
+  }
+  if (props.successSignup) {
+    return <Redirect to="/login" />;
+  }
   return (
     <React.Fragment>
       <div className="welcome" data-testid="welcome-screen">
-        <h2>Welcome to My Calorie Tracker!</h2>
+        <h2>Welcome, new user!</h2>
         <p>
           Please create an account and share your goals so that we can better
           help you reach them!
         </p>
+        <p>
+          Existing User? <Link to="/login">Login</Link>
+        </p>
         <br />
         <div className="user-input">
-          <label>Username:</label>
-          <input id="userUsername" type="text" />
-        </div>
-        <div className="user-input">
-          <label>Password:</label>
-          <input id="userPassword" type="text" />
-        </div>
-        <div className="user-input">
-          <label>Email:</label>
-          <input id="userEmail" type="text" />
-        </div>
-        <div className="user-input">
-          <label htmlFor="userName">Name:</label>
+          <label htmlFor="userUsername">Username:</label>
           <input
-            id="userName"
-            placeholder="Name"
+            id="userUsername"
+            placeholder="Username"
             type="text"
-            value={props.userName}
+            value={props.userUsername}
             onChange={props.handleChange}
-          />{" "}
+          />
+        </div>
+        <div className="user-input">
+          <label htmlFor="userPassword">Password:</label>
+          <input
+            id="userPassword"
+            placeholder="Password"
+            type="text"
+            value={props.userPassword}
+            onChange={props.handleChange}
+          />
+        </div>
+        <div className="user-input">
+          <label htmlFor="userEmail">Email:</label>
+          <input
+            id="userEmail"
+            placeholder="Email"
+            type="text"
+            value={props.userEmail}
+            onChange={props.handleChange}
+          />
         </div>
         <div className="user-input">
           <label htmlFor="userWeight">Current Weight:</label>
@@ -62,9 +80,7 @@ function Welcome(props) {
             value={props.time}
             onChange={props.handleChange}
           />{" "}
-          <Link to="/tracker">
-            <button>Submit</button>
-          </Link>
+          <button onClick={props.signupUser}>Submit</button>
         </div>
       </div>
       <div className="faq">
@@ -84,4 +100,4 @@ function Welcome(props) {
   );
 }
 
-export default Welcome;
+export default SignUp;

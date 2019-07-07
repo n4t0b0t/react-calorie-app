@@ -5,6 +5,7 @@ import ManualAdd from "./ManualAdd";
 import fetchApiData from "../funcs/Fetch";
 import FoodSearchInput from "./FoodSearchInput";
 import SearchResults from "./SearchResults";
+import axios from "axios";
 
 class Tracker extends React.Component {
   constructor(props) {
@@ -15,7 +16,11 @@ class Tracker extends React.Component {
       foodSearch: "",
       manFood: "",
       manCalorie: "",
-      mealSelect: "Breakfast"
+      mealSelect: "Breakfast",
+      editField: "",
+      logDate: new Date(new Date().setHours(0, 0, 0, 0))
+        .toISOString()
+        .slice(0, 10)
     };
   }
 
@@ -29,13 +34,25 @@ class Tracker extends React.Component {
   };
 
   // when clicked, updates state with element to be added to the daily log
-  handleAdd = element => {
+  handleAdd = async element => {
     let newItem = {
       meal: this.state.mealSelect,
-      type: element.label,
-      calorie: element.calorie
+      item: element.label,
+      calories: element.calories
     };
-    this.setState({ dailyLog: [...this.state.dailyLog, newItem] });
+    // this.setState({ dailyLog: [...this.state.dailyLog, newItem] });
+    await axios
+      .post(
+        `${global.apiURI}/users/${this.props.authUser}/foodlog/${
+          this.state.logDate
+        }`,
+        newItem,
+        {
+          headers: { Authorization: "Bearer " + this.props.jwt }
+        }
+      )
+      .then(res => this.setState({ dailyLog: res.data }))
+      .catch(err => console.log(err));
   };
 
   // updates state.[id] with changes to input fields
@@ -48,7 +65,7 @@ class Tracker extends React.Component {
     this.setState({ mealSelect: e.target.value });
   };
 
-  // fetches API data - any errors return empty array (tells user no results found)
+  // fetches external nutrition API data - any errors return empty array (tells user no results found)
   fetchData = async () => {
     try {
       const response = await fetchApiData(this.state.foodSearch);
@@ -66,14 +83,79 @@ class Tracker extends React.Component {
     }
   };
 
+  fetchDailyLog = async () => {
+    await axios
+      .get(
+        `${global.apiURI}/users/${this.props.authUser}/foodlog/${
+          this.state.logDate
+        }`,
+        {
+          headers: { Authorization: "Bearer " + this.props.jwt }
+        }
+      )
+      .then(res => this.setState({ dailyLog: res.data }))
+      .catch(err => console.log(err));
+  };
+
+  // fetches user's dated foodlog
+  componentDidUpdate = async (prevProps, prevState) => {
+    if (prevProps.authUser !== this.props.authUser) {
+      await this.fetchDailyLog();
+    }
+  };
+
+  componentDidMount = async () => {
+    this.fetchDailyLog();
+  };
+
+  editEntry = id => {
+    this.setState({ editField: id });
+  };
+
+  submitEdit = async (id, date, meal) => {
+    let updateItem = {
+      meal: meal,
+      item: this.state.updateItem,
+      calories: this.state.updateCalorie
+    };
+    // this.setState({ dailyLog: [...this.state.dailyLog, newItem] });
+    await axios
+      .put(
+        `${global.apiURI}/users/${this.props.authUser}/foodlog/${
+          this.state.logDate
+        }/${id}`,
+        updateItem,
+        {
+          headers: { Authorization: "Bearer " + this.props.jwt }
+        }
+      )
+      .then(res => this.setState({ dailyLog: res.data, editField: "" }))
+      .catch(err => console.log(err));
+  };
+
+  removeEntry = async (id, date) => {
+    await axios
+      .delete(
+        `${global.apiURI}/users/${this.props.authUser}/foodlog/${
+          this.state.logDate
+        }/${id}`,
+        {
+          headers: { Authorization: "Bearer " + this.props.jwt }
+        }
+      )
+      .then(res => this.setState({ dailyLog: res.data }))
+      .catch(err => console.log(err));
+  };
+
   render() {
+    console.log("props in render", this.props);
     return (
       <React.Fragment>
         <main data-testid="tracker-screen">
           <p>
             Hello{" "}
-            {this.props.userName
-              ? this.props.userName
+            {this.props.authUser
+              ? this.props.authUser
               : "Visitor, you may want to consider adding your information and goals for better results"}
             !
           </p>
@@ -103,7 +185,15 @@ class Tracker extends React.Component {
         </main>
         <div className="log">
           <h2>Today's Food Log</h2>
-          <DailyLog log={this.state.dailyLog} />
+          <DailyLog
+            log={this.state.dailyLog}
+            editField={this.state.editField}
+            editEntry={this.editEntry}
+            submitEdit={this.submitEdit}
+            handleChange={this.handleChange}
+            removeEntry={this.removeEntry}
+            date={this.state.logDate}
+          />
         </div>
       </React.Fragment>
     );

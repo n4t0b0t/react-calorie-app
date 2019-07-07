@@ -11,7 +11,7 @@ function SearchResults(props) {
       foodId: element.food.foodId,
       image: element.food.image ? element.food.image : defaultImage,
       label: element.food.label.toLowerCase(),
-      calorie: round(element.food.nutrients.ENERC_KCAL),
+      calories: round(element.food.nutrients.ENERC_KCAL),
       carbs: round(element.food.nutrients.CHOCDF, 2),
       protein: round(element.food.nutrients.PROCNT, 2),
       fat: round(element.food.nutrients.FAT, 2),
@@ -40,8 +40,8 @@ function SearchResults(props) {
                 <img src={element.image} alt={element.label} />
                 <p>{element.label}</p>
                 <figcaption>
-                  Calorie: {element.calorie} | Carbs: {element.carbs} | Protein:{" "}
-                  {element.protein} | Fat: {element.fat} | Fiber:{" "}
+                  Calorie: {element.calories} | Carbs: {element.carbs} |
+                  Protein: {element.protein} | Fat: {element.fat} | Fiber:{" "}
                   {element.fiber}
                 </figcaption>
                 <button onClick={() => props.handleAdd(element)}>+</button>

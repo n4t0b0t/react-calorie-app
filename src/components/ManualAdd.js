@@ -26,7 +26,7 @@ function ManualAdd(props) {
           onClick={() =>
             props.handleAdd({
               label: props.manFood,
-              calorie: round(props.manCalorie)
+              calories: round(props.manCalorie)
             })
           }
         >
