@@ -15,7 +15,10 @@ import Tracker from "./Tracker";
 import axios from "axios";
 import HistoryLog from "./HistoryLog";
 
-global.apiURI = "http://localhost:3001";
+global.apiURI =
+  process.env.NODE_ENV === "production"
+    ? process.env.HEROKU_API
+    : "http://localhost:3001";
 
 class App extends React.Component {
   constructor(props) {
