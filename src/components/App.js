@@ -88,7 +88,7 @@ class App extends React.Component {
     };
 
     await axios
-      .post(`${global.apiURI}/login`, userLogin)
+      .post("https://calorie-tracker-api.herokuapp.com/login", userLogin)
       .then(res => {
         this.setState({
           failSignIn: false,
