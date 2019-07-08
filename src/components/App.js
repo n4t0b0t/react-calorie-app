@@ -17,7 +17,7 @@ import HistoryLog from "./HistoryLog";
 
 global.apiURI =
   process.env.NODE_ENV === "production"
-    ? process.env.HEROKU_API
+    ? "https ://calorie-tracker-api.herokuapp.com"
     : "http://localhost:3001";
 
 class App extends React.Component {
