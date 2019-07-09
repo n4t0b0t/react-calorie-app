@@ -6,7 +6,6 @@ import Orange from "../assets/Orange.svg";
 import "../styles/App.css";
 // import PropTypes from "prop-types"; // figure out where to add proptypes later!
 import { Route, Link, BrowserRouter as Router } from "react-router-dom";
-import { Redirect } from "react-router-dom";
 import Home from "./Home";
 import SignUp from "./SignUp";
 import Login from "./Login";
@@ -58,8 +57,6 @@ class App extends React.Component {
       this.setState({ [e.target.id]: e.target.value });
     }
   };
-
-  handleClick() {}
 
   signupUser = async () => {
     const userSignup = {
