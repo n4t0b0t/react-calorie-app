@@ -34,18 +34,18 @@ class Tracker extends React.Component {
   };
 
   // when clicked, updates state with element to be added to the daily log
-  handleAdd = async element => {
+  handleAdd = element => {
     let newItem = {
       meal: this.state.mealSelect,
       item: element.label,
       calories: element.calories
     };
     // this.setState({ dailyLog: [...this.state.dailyLog, newItem] });
-    await axios
+    axios
       .post(
-        `${global.apiURI}/users/${this.props.authUser}/foodlog/${
-          this.state.logDate
-        }`,
+        `${process.env.REACT_APP_HEROKU_API}/users/${
+          this.props.authUser
+        }/foodlog/${this.state.logDate}`,
         newItem,
         {
           headers: { Authorization: "Bearer " + this.props.jwt }
@@ -83,12 +83,12 @@ class Tracker extends React.Component {
     }
   };
 
-  fetchDailyLog = async () => {
-    await axios
+  fetchDailyLog = () => {
+    axios
       .get(
-        `${global.apiURI}/users/${this.props.authUser}/foodlog/${
-          this.state.logDate
-        }`,
+        `${process.env.REACT_APP_HEROKU_API}/users/${
+          this.props.authUser
+        }/foodlog/${this.state.logDate}`,
         {
           headers: { Authorization: "Bearer " + this.props.jwt }
         }
@@ -112,18 +112,18 @@ class Tracker extends React.Component {
     this.setState({ editField: id });
   };
 
-  submitEdit = async (id, date, meal) => {
+  submitEdit = (id, date, meal) => {
     let updateItem = {
       meal: meal,
       item: this.state.updateItem,
       calories: this.state.updateCalorie
     };
     // this.setState({ dailyLog: [...this.state.dailyLog, newItem] });
-    await axios
+    axios
       .put(
-        `${global.apiURI}/users/${this.props.authUser}/foodlog/${
-          this.state.logDate
-        }/${id}`,
+        `${process.env.REACT_APP_HEROKU_API}/users/${
+          this.props.authUser
+        }/foodlog/${this.state.logDate}/${id}`,
         updateItem,
         {
           headers: { Authorization: "Bearer " + this.props.jwt }
@@ -133,12 +133,12 @@ class Tracker extends React.Component {
       .catch(err => console.log(err));
   };
 
-  removeEntry = async (id, date) => {
-    await axios
+  removeEntry = (id, date) => {
+    axios
       .delete(
-        `${global.apiURI}/users/${this.props.authUser}/foodlog/${
-          this.state.logDate
-        }/${id}`,
+        `${process.env.REACT_APP_HEROKU_API}/users/${
+          this.props.authUser
+        }/foodlog/${this.state.logDate}/${id}`,
         {
           headers: { Authorization: "Bearer " + this.props.jwt }
         }
@@ -148,7 +148,6 @@ class Tracker extends React.Component {
   };
 
   render() {
-    console.log("props in render", this.props);
     return (
       <React.Fragment>
         <main data-testid="tracker-screen">

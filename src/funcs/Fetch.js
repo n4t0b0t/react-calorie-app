@@ -1,10 +1,13 @@
 async function fetchApiData(foodSearch) {
   const searchText = encodeURIComponent(foodSearch);
   const baseURL = "https://api.edamam.com/api/food-database/parser?ingr=";
-  const appId = "5aff3ca9";
-  const appKey = "c7cd298798507c71ce18987bab8ea27f";
   const searchUrl =
-    baseURL + searchText + "&app_id=" + appId + "&app_key=" + appKey;
+    baseURL +
+    searchText +
+    "&app_id=" +
+    process.env.EDAMAM_API_ID +
+    "&app_key=" +
+    process.env.EDAMAM_API_KEY;
 
   const response = await fetch(searchUrl);
 

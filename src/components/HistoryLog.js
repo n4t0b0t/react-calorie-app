@@ -18,9 +18,14 @@ class HistoryLog extends React.Component {
     //prevProps, prevState
     // if (prevProps.authUser !== this.props.authUser) {
     await axios
-      .get(`${global.apiURI}/users/${this.props.authUser}/foodlog/`, {
-        headers: { Authorization: "Bearer " + this.props.jwt }
-      })
+      .get(
+        `${process.env.REACT_APP_HEROKU_API}/users/${
+          this.props.authUser
+        }/foodlog/`,
+        {
+          headers: { Authorization: "Bearer " + this.props.jwt }
+        }
+      )
       .then(res => {
         this.setState({ historyLog: res.data });
       })
@@ -48,7 +53,7 @@ class HistoryLog extends React.Component {
     };
     await axios
       .put(
-        `${global.apiURI}/users/${
+        `${process.env.REACT_APP_HEROKU_API}/users/${
           this.props.authUser
         }/foodlog/${dateString}/${id}`,
         updateItem,
@@ -74,7 +79,7 @@ class HistoryLog extends React.Component {
     const dateString = new Date(date).toISOString().slice(0, 10);
     await axios
       .delete(
-        `${global.apiURI}/users/${
+        `${process.env.REACT_APP_HEROKU_API}/users/${
           this.props.authUser
         }/foodlog/${dateString}/${id}`,
         {

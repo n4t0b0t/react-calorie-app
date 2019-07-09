@@ -15,11 +15,6 @@ import Tracker from "./Tracker";
 import axios from "axios";
 import HistoryLog from "./HistoryLog";
 
-global.apiURI =
-  process.env.NODE_ENV === "production"
-    ? "https ://calorie-tracker-api.herokuapp.com"
-    : "http://localhost:3001";
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -44,7 +39,7 @@ class App extends React.Component {
     if (jwt) {
       headers.Authorization = "Bearer " + jwt;
       await axios
-        .get(`${global.apiURI}/secure`, { headers })
+        .get(`${process.env.REACT_APP_HEROKU_API}/secure`, { headers })
         .then(res =>
           this.setState({
             jwt: jwt,
@@ -74,7 +69,7 @@ class App extends React.Component {
     };
 
     await axios
-      .post(`${global.apiURI}/signup`, userSignup)
+      .post(`${process.env.REACT_APP_HEROKU_API}/signup`, userSignup)
       .then(res =>
         this.setState({ sucessSignup: true, signupMessage: res.data })
       )
@@ -88,7 +83,7 @@ class App extends React.Component {
     };
 
     await axios
-      .post("https://calorie-tracker-api.herokuapp.com/login", userLogin)
+      .post(`${process.env.REACT_APP_HEROKU_API}/login`, userLogin)
       .then(res => {
         this.setState({
           failSignIn: false,
