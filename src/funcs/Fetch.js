@@ -5,9 +5,9 @@ async function fetchApiData(foodSearch) {
     baseURL +
     searchText +
     "&app_id=" +
-    process.env.EDAMAM_API_ID +
+    process.env.REACT_APP_EDAMAM_API_ID +
     "&app_key=" +
-    process.env.EDAMAM_API_KEY;
+    process.env.REACT_APP_EDAMAM_API_KEY;
 
   const response = await fetch(searchUrl);
 
