@@ -15,8 +15,6 @@ class HistoryLog extends React.Component {
   };
 
   componentDidMount = async () => {
-    //prevProps, prevState
-    // if (prevProps.authUser !== this.props.authUser) {
     await axios
       .get(
         `${process.env.REACT_APP_HEROKU_API}/users/${

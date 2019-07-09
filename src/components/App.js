@@ -224,9 +224,6 @@ class App extends React.Component {
                   jwt={this.state.jwt}
                   isLoggedIn={this.state.isLoggedIn}
                   authUser={this.state.authUser}
-                  userWeight={this.state.userWeight}
-                  weightTarget={this.state.weightTarget}
-                  time={this.state.time}
                 />
               )}
             />

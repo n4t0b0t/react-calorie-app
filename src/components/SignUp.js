@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Link, BrowserRouter as Router } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 
 function SignUp(props) {

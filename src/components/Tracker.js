@@ -6,6 +6,7 @@ import fetchApiData from "../funcs/Fetch";
 import FoodSearchInput from "./FoodSearchInput";
 import SearchResults from "./SearchResults";
 import axios from "axios";
+import { Redirect } from "react-router-dom";
 
 class Tracker extends React.Component {
   constructor(props) {
@@ -148,6 +149,9 @@ class Tracker extends React.Component {
   };
 
   render() {
+    if (!this.props.isLoggedIn) {
+      return <Redirect to="/signup" />;
+    }
     return (
       <React.Fragment>
         <main data-testid="tracker-screen">
